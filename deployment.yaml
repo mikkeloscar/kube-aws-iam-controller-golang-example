@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: aws-iam-golang-example
+  labels:
+    application: aws-iam-golang-example
+    version: latest
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      application: aws-iam-golang-example
+  template:
+    metadata:
+      labels:
+        application: aws-iam-golang-example
+        version: latest
+    spec:
+      containers:
+      - name: aws-iam-golang-example
+        image: mikkeloscar/kube-aws-iam-controller-golang-example:latest
+        env:
+        # must be set for the AWS SDK/AWS CLI to find the credentials file.
+        - name: AWS_SHARED_CREDENTIALS_FILE # used by golang SDK
+          value: /meta/aws-iam/credentials.process
+        - name: AWS_DEFAULT_REGION
+          value: eu-central-1
+        - name: AWS_REGION
+          value: eu-central-1
+        volumeMounts:
+        - name: aws-iam-credentials
+          mountPath: /meta/aws-iam
+          readOnly: true
+        resources:
+          limits:
+            cpu: 5m
+            memory: 50Mi
+          requests:
+            cpu: 5m
+            memory: 50Mi
+      volumes:
+      - name: aws-iam-credentials
+        secret:
+          # secret should be named: aws-iam-<name-of-your-aws-iam-role>
+          secretName: aws-iam-aws-iam-example
