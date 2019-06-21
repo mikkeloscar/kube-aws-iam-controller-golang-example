@@ -41,11 +41,11 @@ spec:
       volumes:
       - name: aws-iam-credentials
         secret:
-          secretName: aws-iam-golang-example # name of the AWSIAMRole resource
+          secretName: golang-aws-iam-example # name of the AWSIAMRole resource
 ---
 apiVersion: zalando.org/v1
 kind: AWSIAMRole
 metadata:
-  name: aws-iam-golang-example
+  name: golang-aws-iam-example
 spec:
   roleReference: aws-iam-example
